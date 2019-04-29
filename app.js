@@ -13,6 +13,7 @@ connect.then((db) => {
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var heroesRouter = require('./routes/heroes');
+var villainsRouter = require('./routes/villains');
 
 var app = express();
 
@@ -25,5 +26,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/heroes', heroesRouter);
-
+app.use('/villains', villainsRouter);
 module.exports = app;
