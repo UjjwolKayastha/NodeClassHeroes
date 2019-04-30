@@ -17,11 +17,64 @@ var villainsRouter = require('./routes/villains');
 
 var app = express();
 
+//middleware
 app.use(logger('dev'));
 app.use(express.json()); // same as bodyParser.json()
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+function auth(req, res, next){
+    console.log(req.headers);
+    let authHeader = req.headers.authorization;
+    if (!authHeader) {
+        let err = new Error("You are not authenticated!");    
+        res.setHeader("WWW-Authenticate", "Basic");    
+        err.status = 401;
+        return next(err); 
+     }
+
+
+
+    let auth = new Buffer.from(authHeader.split(" ")[1], "base64")    
+    .toString()    
+    .split(":");
+    let username = auth[0];
+    let password = auth[1];
+    //   Default username and password
+    if(username == 'admin' && password== 'admin') {      
+        next(); // authorized  
+    } else {let err = newError('You are not authenticated!');      
+    res.setHeader('WWW-Authenticate', "Basic");      
+    err.status = 401;      
+    return next(err);  }
+    // console.log(req.headers);
+    // let authHeader = req.headers.authorization;
+    // if (!authHeader) {
+    //     let err = new Error("You are not authenticated!");    
+    //     res.setHeader("WWW-Authenticate", "Basic");    
+    //     err.status = 401;
+    //     return next(err); 
+    //  }
+
+    // let auth = new Buffer.from(authHeader.split(" ")[1], "base64").toString().split()
+    // let username = auth[0]
+    // let password = auth[1]
+
+    // if (username == 'admin' && password =='admin'){
+    //     next()
+    // }else{
+    //     let err = new Error("NOT AUTHORIZED")
+    //     res.setHeader("WWW-Authenticate", "Basic")
+    //     err.status = 401
+    //     return next(err)
+    // }
+}
+
+
+app.use(auth);
+
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
