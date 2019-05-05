@@ -96,6 +96,7 @@ function auth(req, res, next) {
 }
 
 //SESSION LAGAAYERA GAREKO + COOKIES NI CHHA
+
 // function auth(req, res, next) {
 //     if (!req.session.user) {
 //         let authHeader = req.headers.authorization;
